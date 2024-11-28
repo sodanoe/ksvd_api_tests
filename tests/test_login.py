@@ -1,4 +1,5 @@
 import json
+import pytest
 from src.ksvd_api import KsvdApi
 
 class TestKsvd:
@@ -7,7 +8,7 @@ class TestKsvd:
 
     def test_login_returns_201(self, http_client):
         global access_token
-        
+
         ksvd_api = KsvdApi(http_client)
         response = ksvd_api.login()
         ans = json.loads(response.text)
@@ -15,8 +16,9 @@ class TestKsvd:
 
         assert response.status_code == 201
 
-    def test_arm_list_returns_200(self, http_client):
+    @pytest.mark.parametrize("endpoint", ["/base/arm_list","/base/product_info","/base/scada_region_list", "/base/server_list", "/health"])
+    def test_arm_list_returns_200(self, endpoint, http_client):
         ksvd_api = KsvdApi(http_client)
-        response = ksvd_api.get_arm_list(access_token)
+        response = ksvd_api.get_arm_list(endpoint, access_token)
         
         assert response.status_code == 200

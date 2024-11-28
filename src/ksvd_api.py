@@ -12,8 +12,8 @@ class KsvdApi:
         response = self.client.send_request(HttpMethods.POST, "/login", json=body)
         return response
     
-    def get_arm_list(self, access_token):
+    def get_arm_list(self, endpoint, access_token):
         headers = {"Authorization": f'Bearer {access_token}'}
-        response = self.client.send_request(HttpMethods.GET, "/base/arm_list", headers=headers)
+        response = self.client.send_request(HttpMethods.GET, endpoint=endpoint, headers=headers)
         return response
     
