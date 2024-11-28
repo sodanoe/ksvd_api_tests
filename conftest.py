@@ -2,7 +2,7 @@ import pytest
 import os
 
 from dotenv import load_dotenv
-from src.http_client import HttpClient
+from src.http_client import HttpClient, HttpMethods
 
 load_dotenv()
 
