@@ -34,10 +34,10 @@ class HttpClient:
             logger.error(f'Request {method} could not be to {url}. Error: {e}')
         else:
             logger.info(
-                f'Request {method} has been sent to {url}. '
-                f'Request data – {response.request.body}. '
-                f'Response status code – {response.status_code}. '
-                f'Response – {response.text}. '
-                f'Response headers – {response.headers}. '
+                f'Request {method} has been sent to {url}. \n'
+                f'Request data – {response.request.body}. \n'
+                f'Response status code – {response.status_code}. \n'
+                f'Response – {response.text}. \n'
+                f'Response headers – {response.headers}. \n'
             )
             return response
