@@ -44,6 +44,6 @@ class TestKsvd:
         ksvd_api = KsvdApi(http_client)
         response = ksvd_api.get_with_token(endpoint, access_token)
         response_json = response.json()
-        compare = JsonCompare(ref, response_json["data"])
+        compare = JsonCompare()
 
-        assert compare.compare()
+        assert compare.compare(ref, response_json["data"])
