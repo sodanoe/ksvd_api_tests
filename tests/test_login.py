@@ -31,13 +31,19 @@ class TestKsvd:
     def test_get_lists_returns_200(self, endpoint, http_client):
         ksvd_api = KsvdApi(http_client)
         response = ksvd_api.get_with_token(endpoint, access_token)
-        
+
         assert response.status_code == 200
 
-    def test_compare_product_info_ret_true(self, http_client):
+    @pytest.mark.parametrize("endpoint, ref", [
+        ("/base/arm_list", RefSchemas.GET_ARM_LIST_REF),
+        ("/base/product_info", RefSchemas.GET_PRODUCT_INFO_REF),
+        ("/base/scada_region_list", RefSchemas.GET_SCADA_REG_LIST_REF), 
+        ("/base/server_list", RefSchemas.GET_SERVER_LIST_REF), 
+        ("/health", RefSchemas.GET_HEALTH_REF)])
+    def test_compare_product_info_ret_true(self, endpoint, ref, http_client):
         ksvd_api = KsvdApi(http_client)
-        response = ksvd_api.get_with_token("/base/product_info", access_token)
-        shit = response.json()
-        compare = JsonCompare(RefSchemas.PRODUCT_INFO_REF, shit["data"])
-        
+        response = ksvd_api.get_with_token(endpoint, access_token)
+        response_json = response.json()
+        compare = JsonCompare(ref, response_json["data"])
+
         assert compare.compare()
