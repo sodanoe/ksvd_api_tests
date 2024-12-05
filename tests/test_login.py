@@ -9,14 +9,21 @@ from logging import getLogger
 
 logger = getLogger(__name__)
 
-EP = ["/base/arm_list","/base/product_info","/base/scada_region_list", "/base/server_list", "/health"]
+EP = [
+    "/base/arm_list",
+    "/base/product_info",
+    "/base/scada_region_list",
+    "/base/server_list",
+    "/health",
+]
 
 EP_AND_REFS = [
-        ("/base/arm_list", RefSchemas.GET_ARM_LIST_REF),
-        ("/base/product_info", RefSchemas.GET_PRODUCT_INFO_REF),
-        ("/base/scada_region_list", RefSchemas.GET_SCADA_REG_LIST_REF), 
-        ("/base/server_list", RefSchemas.GET_SERVER_LIST_REF), 
-        ("/health", RefSchemas.GET_HEALTH_REF)]
+    ("/base/arm_list", RefSchemas.GET_ARM_LIST_REF),
+    ("/base/product_info", RefSchemas.GET_PRODUCT_INFO_REF),
+    ("/base/scada_region_list", RefSchemas.GET_SCADA_REG_LIST_REF),
+    ("/base/server_list", RefSchemas.GET_SERVER_LIST_REF),
+    ("/health", RefSchemas.GET_HEALTH_REF),
+]
 
 
 class TestKsvd:
@@ -32,7 +39,7 @@ class TestKsvd:
         try:
             access_token = ans["data"]["access_token"]
         except TypeError as e:
-            logger.error(f'Can not get access_token. Error: {e}')
+            logger.error(f"Can not get access_token. Error: {e}")
 
         assert response.status_code == 201
 
