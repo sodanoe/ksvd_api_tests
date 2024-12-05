@@ -9,6 +9,15 @@ from logging import getLogger
 
 logger = getLogger(__name__)
 
+EP = ["/base/arm_list","/base/product_info","/base/scada_region_list", "/base/server_list", "/health"]
+
+EP_AND_REFS = [
+        ("/base/arm_list", RefSchemas.GET_ARM_LIST_REF),
+        ("/base/product_info", RefSchemas.GET_PRODUCT_INFO_REF),
+        ("/base/scada_region_list", RefSchemas.GET_SCADA_REG_LIST_REF), 
+        ("/base/server_list", RefSchemas.GET_SERVER_LIST_REF), 
+        ("/health", RefSchemas.GET_HEALTH_REF)]
+
 
 class TestKsvd:
 
@@ -27,19 +36,14 @@ class TestKsvd:
 
         assert response.status_code == 201
 
-    @pytest.mark.parametrize("endpoint", ["/base/arm_list","/base/product_info","/base/scada_region_list", "/base/server_list", "/health"])
+    @pytest.mark.parametrize("endpoint", EP)
     def test_get_lists_returns_200(self, endpoint, http_client):
         ksvd_api = KsvdApi(http_client)
         response = ksvd_api.get_with_token(endpoint, access_token)
 
         assert response.status_code == 200
 
-    @pytest.mark.parametrize("endpoint, ref", [
-        ("/base/arm_list", RefSchemas.GET_ARM_LIST_REF),
-        ("/base/product_info", RefSchemas.GET_PRODUCT_INFO_REF),
-        ("/base/scada_region_list", RefSchemas.GET_SCADA_REG_LIST_REF), 
-        ("/base/server_list", RefSchemas.GET_SERVER_LIST_REF), 
-        ("/health", RefSchemas.GET_HEALTH_REF)])
+    @pytest.mark.parametrize("endpoint, ref", EP_AND_REFS)
     def test_compare_product_info_ret_true(self, endpoint, ref, http_client):
         ksvd_api = KsvdApi(http_client)
         response = ksvd_api.get_with_token(endpoint, access_token)
