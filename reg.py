@@ -1,15 +1,23 @@
 import re
+from logging import getLogger
 
-def test_guid_valid():
-    valid_guid = "{dcabda92-c90e-4359-b33d-4ed465a31b26}"
-    match_result = re.match(r"\{[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\}", valid_guid)
+logger = getLogger(__name__)
 
-    assert match_result is not None, f"{valid_guid} does not match the expected format"
-    assert match_result.group(0) == valid_guid, "Mismatch in matched GUID string"
+class RegexpChecks:
 
-def test_ipv4_address_valid():
-    regex = r'\b[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\b'
-    valid_ip = "192.168.0.1"
-    match = re.match(regex, valid_ip)
+    def is_guid_valid(guid):
+        logger.info(f"Input is {guid}\n")
 
-    assert match is not None, f"{valid_ip} is not a valid IPv4 address"
+        match_result = re.match(r"\{[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\}", guid)
+
+        if match_result is not None:
+            return True
+        else:
+            return False
+
+    def test_ipv4_address_valid():
+        regex = r'\b[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\b'
+        valid_ip = "192.168.0.1"
+        match = re.match(regex, valid_ip)
+
+        assert match is not None, f"{valid_ip} is not a valid IPv4 address"
