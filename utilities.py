@@ -12,7 +12,7 @@ class JsonCompare:
             if isinstance(reference_json[key], dict):
                 state = self.compare(reference_json[key], response_json[key])
             elif isinstance(reference_json[key], list):
-                for i, item in enumerate(response_json[key]):
+                for i, _ in enumerate(response_json[key]):
                     state = self.compare(reference_json[key][0], response_json[key][i])
             else:
 
@@ -27,6 +27,3 @@ class JsonCompare:
                 logger.error(f"Key {key} not found.")
                 state = False
         return state
-
-
-print(re.match(r'^[^\s.]*[^\s.]\s*[^\s.]*[^\s.]*$', ''))
