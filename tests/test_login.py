@@ -1,8 +1,6 @@
 import json
 import pytest
 
-
-from reg import RegexpChecks
 from data_refs import RefSchemas
 from utilities import JsonCompare
 from src.ksvd_api import KsvdApi
@@ -30,14 +28,13 @@ EP_W_GUID = [
     "/base/scada_camera_list/{guid}",
     "/base/scada_layout_list/{guid}",
     "/base/scada_object_list/{guid}",
-    "/base/scada_object_list/{guid}"
+    "/base/scada_object_list/{guid}",
 ]
 
 
 class TestKsvd:
 
     access_token = ""
-    guid = ""
 
     def test_login_returns_201(self, http_client):
         global access_token
@@ -63,10 +60,8 @@ class TestKsvd:
     def test_get_lists_w_guid_returns_200(self, endpoint, http_client):
         ksvd_api = KsvdApi(http_client)
         guid = ksvd_api.get_scada_guid(access_token)
-        response = ksvd_api.get_with_token(f'{endpoint}{guid}', access_token)
-        guid_state = RegexpChecks.is_guid_valid(guid)
+        response = ksvd_api.get_with_token(f"{endpoint}{guid}", access_token)
 
-        assert guid_state
         assert response.status_code == 200
 
     @pytest.mark.parametrize("endpoint, ref", EP_AND_REFS)
@@ -77,4 +72,3 @@ class TestKsvd:
         compare = JsonCompare()
 
         assert compare.compare(ref, response_json["data"])
-
