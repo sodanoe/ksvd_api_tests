@@ -24,17 +24,14 @@ EP_AND_REFS = [
     ("/health", RefSchemas.GET_HEALTH_REF),
 ]
 
-EP_W_GUID = [
-    "/base/scada_camera_list/{guid}",
-    "/base/scada_layout_list/{guid}",
-    "/base/scada_object_list/{guid}",
-    "/base/scada_object_list/{guid}",
+EP_OBJ_W_GUID = [
+    ("/base/scada_camera_list/", RefSchemas.GET_CAMERAS_LIST),
+    ("/base/scada_layout_list/", RefSchemas.GET_LAYOUT_LIST),
+    # ("/base/scada_sensor_list/", RefSchemas.GET_SENSOR_LIST),
 ]
 
 
 class TestKsvd:
-
-    access_token = ""
 
     def test_login_returns_201(self, http_client):
         global access_token
@@ -56,19 +53,33 @@ class TestKsvd:
 
         assert response.status_code == 200
 
-    @pytest.mark.parametrize("endpoint", EP_W_GUID)
-    def test_get_lists_w_guid_returns_200(self, endpoint, http_client):
-        ksvd_api = KsvdApi(http_client)
-        guid = ksvd_api.get_scada_guid(access_token)
-        response = ksvd_api.get_with_token(f"{endpoint}{guid}", access_token)
-
-        assert response.status_code == 200
-
     @pytest.mark.parametrize("endpoint, ref", EP_AND_REFS)
-    def test_compare_json_schemas(self, endpoint, ref, http_client):
+    def test_compare_json_schemas_wo_guid(self, endpoint, ref, http_client):
         ksvd_api = KsvdApi(http_client)
         response = ksvd_api.get_with_token(endpoint, access_token)
         response_json = response.json()
         compare = JsonCompare()
 
+        assert compare.compare(ref, response_json["data"])
+
+    @pytest.mark.parametrize("endpoint, ref", ("/base/scada_object_list/", RefSchemas.GET_REGION_LIST))
+    def test_get_region_lists_w_guid_returns_200(self, endpoint, ref, http_client):
+        ksvd_api = KsvdApi(http_client)
+        guid = ksvd_api.get_region_guid(access_token)
+        response = ksvd_api.get_with_token(f"{endpoint}{guid}", access_token)
+        response_json = response.json()
+        compare = JsonCompare()
+
+        assert response.status_code == 200
+        assert compare.compare(ref, response_json["data"])
+        
+    @pytest.mark.parametrize("endpoint, ref", EP_OBJ_W_GUID)
+    def test_get_object_lists_w_guid_returns_200(self, endpoint, ref, http_client):
+        ksvd_api = KsvdApi(http_client)
+        guid = ksvd_api.get_object_guid(access_token)
+        response = ksvd_api.get_with_token(f"{endpoint}{guid}", access_token)
+        response_json = response.json()
+        compare = JsonCompare()
+
+        assert response.status_code == 200
         assert compare.compare(ref, response_json["data"])
